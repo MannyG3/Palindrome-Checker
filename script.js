@@ -1,20 +1,40 @@
-document.getElementById('check-btn').addEventListener('click', function() {
-    const input = document.getElementById('text-input').value;
-    const resultElement = document.getElementById('result');
+const userInput = document.getElementById('text-input');
+const checkPalindromeBtn = document.getElementById('check-btn');
+const resultDiv = document.getElementById('result');
 
-    if (!input) {
-        alert('Please input a value');
-        resultElement.textContent = '';
-        return;
-    }
+const checkForPalindrome = input => {
+  const originalInput = input; // Store for later output
 
-    // Remove non-alphanumeric characters and convert to lowercase
-    const cleanInput = input.replace(/[^a-z0-9]/gi, '').toLowerCase();
+  if (input === '') {
+    alert('Please input a value');
+    return;
+  }
 
-    // Check if the cleaned input is a palindrome
-    if (cleanInput === cleanInput.split('').reverse().join('')) {
-        resultElement.textContent = `${input} is a palindrome`;
-    } else {
-        resultElement.textContent = `${input} is not a palindrome`;
-    }
+  // Remove the previous result
+  resultDiv.replaceChildren();
+
+  const lowerCaseStr = input.replace(/[^A-Za-z0-9]/gi, '').toLowerCase();
+  let resultMsg = `${originalInput} ${
+    lowerCaseStr === [...lowerCaseStr].reverse().join('') ? 'is' : 'is not'
+  } a palindrome.`;
+
+  const pTag = document.createElement('p');
+  pTag.className = 'user-input';
+  pTag.innerText = resultMsg;
+  resultDiv.appendChild(pTag);
+
+  // Show the result.
+  resultDiv.classList.remove('hidden');
+};
+
+checkPalindromeBtn.addEventListener('click', () => {
+  checkForPalindrome(userInput.value);
+  userInput.value = '';
+});
+
+userInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    checkForPalindrome(userInput.value);
+    userInput.value = '';
+  }
 });
